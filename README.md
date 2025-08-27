@@ -1,20 +1,6 @@
-🏥 Sistema de Gestão para Unidades de Saúde
+🏥 Sistema de Gestão para Unidades de Saúde  senha leo
 
-Um sistema desenvolvido para auxiliar unidades de saúde no gerenciamento de pacientes, agendamentos, profissionais e atendimentos.
-
-🚀 Funcionalidades
-
-📋 Cadastro e gerenciamento de pacientes
-
-👨‍⚕️ Registro de profissionais de saúde
-
-🗓️ Agendamento de consultas e exames
-
-🏥 Controle de atendimentos
-
-💊 Gestão de medicamentos e receitas
-
-📊 Relatórios e indicadores de saúde
+Um sistema desenvolvido para auxiliar unidades de saúde no gerenciamento de pacientes e atendimentos.
 
 🛠️ Tecnologias Utilizadas
 

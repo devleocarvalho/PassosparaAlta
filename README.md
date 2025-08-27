@@ -33,3 +33,9 @@ Infraestrutura: Docker / Kubernetes / CI-CD (caso use)
   /backend    -> código do servidor
   /frontend   -> aplicação web
   /docs       -> documentação e diagramas
+
+
+  📜 Licença
+
+Este projeto está sob a licença MIT – veja o arquivo LICENSE
+ para mais detalhes.

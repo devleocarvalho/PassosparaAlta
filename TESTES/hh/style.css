@@ -1,0 +1,218 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(to right, #e3f2fd, #fce4ec);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    background-color: white;
+    padding: 2rem 3rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 96vh; /* Para que o container caiba na tela sem rolagem externa */
+}
+
+h1 {
+    color: #5e35b1;
+    margin-bottom: 1.5vh;
+    font-size: 5vw; /* Tamanho da fonte responsivo */
+    max-font-size: 30px; /* Limite máximo */
+}
+
+.intro {
+    color: #444;
+    margin-bottom: 2.5vh;
+    font-size: 3vw; /* Tamanho da fonte responsivo */
+    max-font-size: 16px; /* Limite máximo */
+}
+
+.pergunta {
+    font-size: 4vw; /* Tamanho da fonte responsivo */
+    color: #333;
+    margin-bottom: 2.5vh;
+    font-weight: bold;
+    max-font-size: 22px; /* Limite máximo */
+    flex-shrink: 0; /* Impede que o texto da pergunta encolha */
+}
+
+.botoes { /* Container para os botões de opção */
+    display: flex;
+    justify-content: center;
+    gap: 1.5vw; /* Espaçamento responsivo entre os botões */
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+    margin-bottom: 2vh;
+    flex-grow: 1; /* Permite que ocupe o espaço vertical disponível */
+    align-items: center;
+    overflow-y: auto; /* Adiciona scroll interno SOMENTE se as opções não couberem */
+    padding-right: 5px; /* Pequeno padding para 'esconder' a barra de rolagem */
+    box-sizing: border-box;
+}
+
+/* Esconde a barra de rolagem para navegadores WebKit */
+.botoes::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+/* Esconde a barra de rolagem para outros navegadores */
+.botoes {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.botoes button {
+    margin: 10px; /* Mantido para replicar o modelo original, mas o gap já controla o espaço */
+    padding: 1.5vh 3vw; /* Padding responsivo */
+    font-size: 3.5vw; /* Tamanho da fonte responsivo */
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    flex-grow: 1;
+    min-width: 120px;
+    max-font-size: 18px; /* Limite máximo */
+}
+
+/* Cores específicas para os botões de opção (Sim/Não) */
+.botoes button:nth-child(1) { /* Para o botão "Sim" */
+    background-color: #81c784; /* Verde */
+    color: white;
+}
+.botoes button:nth-child(2) { /* Para o botão "Não" */
+    background-color: #e57373; /* Vermelho */
+    color: white;
+}
+
+/* Efeitos de hover e active para todos os botões */
+.botoes button:hover, #botoesAcao button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.botoes button:active, #botoesAcao button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.resultado {
+    font-size: 3.2vw; /* Tamanho da fonte responsivo */
+    margin-top: 3vh;
+    color: #222;
+    animation: fadeIn 0.6s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    align-items: center;
+    text-align: center;
+    max-font-size: 18px; /* Limite máximo */
+}
+
+.resultado h3 {
+    color: #5e35b1;
+    margin-bottom: 1.5vh;
+    font-size: 4.5vw; /* Tamanho da fonte responsivo */
+    max-font-size: 26px; /* Limite máximo */
+}
+
+.resultado p {
+    margin-bottom: 0.8vh; /* Espaçamento menor entre parágrafos do resultado */
+}
+
+.resultado strong {
+    color: #4a148c;
+    font-size: 3.8vw; /* Tamanho da fonte responsivo */
+    max-font-size: 20px; /* Limite máximo */
+}
+
+#botoesAcao { /* Container para o botão de ação (Recomeçar) */
+    margin-top: 3vh;
+    display: flex;
+    justify-content: center;
+    gap: 2.5vw;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+#botoesAcao button {
+    padding: 1.5vh 3vw;
+    font-size: 3.5vw;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fbc02d; /* Amarelo */
+    color: #333;
+    min-width: 45%;
+    max-font-size: 20px; /* Limite máximo */
+}
+
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Media Queries para Ajustes Finos --- */
+
+/* Telas muito pequenas (ex: iPhones SE) */
+@media (max-width: 400px) {
+    .container {
+        padding: 1rem 1.5rem;
+    }
+    h1 {
+        font-size: 6vw;
+        max-font-size: 28px;
+    }
+    .pergunta {
+        font-size: 4.5vw;
+        max-font-size: 20px;
+    }
+    .botoes button {
+        font-size: 3.5vw;
+        max-font-size: 16px;
+        padding: 1.2vh 2vw;
+    }
+    .resultado {
+        font-size: 3.5vw;
+        max-font-size: 17px;
+    }
+    .resultado h3 {
+        font-size: 5vw;
+        max-font-size: 24px;
+    }
+    #botoesAcao button {
+        font-size: 3.8vw;
+        max-font-size: 18px;
+        padding: 1.2vh 2.5vw;
+    }
+}
+
+/* Telas maiores (tablets, desktops) para garantir que as fontes não fiquem minúsculas */
+@media (min-width: 768px) {
+    h1 { font-size: 30px; }
+    .intro { font-size: 16px; }
+    .pergunta { font-size: 22px; }
+    .botoes button { font-size: 18px; }
+    .resultado { font-size: 18px; }
+    .resultado h3 { font-size: 26px; }
+    .resultado strong { font-size: 20px; }
+    #botoesAcao button { font-size: 20px; }
+}

@@ -1,0 +1,206 @@
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(to right, #e3f2fd, #fce4ec);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+   
+  min-height: 100vh;
+  overflow: hidden;  
+}
+
+.container {
+  background-color: white;
+  padding: 1rem 1.5rem;  
+  border-radius: 15px;  
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); 
+  text-align: center;
+  max-width: 400px; 
+  width: 90%;
+  box-sizing: border-box;
+ 
+  max-height: 95vh; 
+  overflow-y: auto; 
+}
+
+.container::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+.container {
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
+}
+
+
+h1 {
+  color: #5e35b1;
+  margin-bottom: 0px; 
+  font-size: 1.6rem;  
+}
+
+.intro {
+  color: #444;
+  margin-bottom: 10px;  
+  font-size: 0.88rem; /* Tamanho da fonte menor */
+}
+
+.pergunta {
+  font-size: 1.3rem;  
+  color: #333;
+  margin-bottom: 0px;  
+  font-weight: bold;
+}
+
+.botoes {
+  display: flex;
+  justify-content: center;
+  gap: 8px; 
+  flex-wrap: wrap;
+  margin-top: 0px;  
+}
+
+.botoes button,
+.proxima-pergunta-btn,
+.relatorio-btn,
+.reteste-btn,
+.opcoes-radio-botoes label {
+  margin: 4px 0; 
+  padding: 0px 5px; 
+  font-size: 0.95rem;  
+  border: none;
+  border-radius: 8px; /* Bordas um pouco menores */
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Sombra mais sutil */
+  background-color: #f0f0f0;
+  color: #333;
+  text-align: center;
+  display: block;
+  width: calc(100% - 8px); 
+  box-sizing: border-box;
+}
+
+.opcoes-radio-botoes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;  
+  gap: 6px; /* Espaçamento entre os botões de opção ainda menor */
+  width: 100%;
+}
+
+.opcoes-radio-botoes label {
+  border: 1px solid #ddd;
+  background-color: #f8f8f8;
+  color: #555;
+  font-weight: 500;
+  max-width: 100%;
+  width: 100%;
+}
+
+.opcoes-radio-botoes label:hover {
+  background-color: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+.opcoes-radio-botoes input[type="radio"] {
+  display: none;
+}
+
+.opcoes-radio-botoes input[type="radio"]:checked + span {
+  background-color: #5e35b1;
+  color: white;
+  border-color: #5e35b1;
+  box-shadow: 0 1px 6px rgba(94, 53, 177, 0.3); 
+}
+
+.opcoes-radio-botoes label span {
+  display: block;
+  padding: 10px 15px; 
+  border-radius: 6px;  
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.botoes button:active,
+.proxima-pergunta-btn:active,
+.relatorio-btn:active,
+.reteste-btn:active,
+.opcoes-radio-botoes label:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); 
+}
+
+.proxima-pergunta-btn {
+    background-color: #007bff;
+    color: white;
+    margin-top: 15px;  
+    padding: 12px 25px; /
+}
+
+.proxima-pergunta-btn:hover {
+    background-color: #0056b3;
+}
+
+#botoesAcao {
+    margin-top: 15px;  
+}
+
+#botoesAcao button.relatorio-btn {
+    background-color: #5e35b1;
+    color: white;
+}
+
+#botoesAcao button.reteste-btn {
+    background-color: #fbc02d;
+    color: #333;
+}
+
+.resultado {
+  font-size: 1rem;  
+  margin-top: 15px;  
+  color: #222;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.resultado h2 {
+    color: #5e35b1;
+    margin-bottom: 8px; 
+    font-size: 1.4rem; /
+}
+
+.resultado strong {
+  color: #4a148c;
+  font-size: 1.1rem;  
+}
+
+ 
+#report-box {
+    border: 1px solid #ccc;
+    border-radius: 6px;  
+    padding: 10px; 
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem; 
+    line-height: 1.3;  
+    background-color: #f9f9f9;
+    resize: vertical;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05); 
+    color: #333;
+    min-height: 120px; 
+    margin-top: 15px;  
+}
+
+/* --- Utilities --- */
+.hidden {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

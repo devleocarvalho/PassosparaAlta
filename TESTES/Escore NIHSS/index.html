@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Escala NIHSS - AVC</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap">
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Escala NIHSS - Avaliação de AVC</h1>
+    <p class="intro">Responda às perguntas abaixo para calcular a pontuação da Escala NIHSS.</p>
+
+    <div id="quizContainer" class="pergunta-container">
+      <p id="question" class="pergunta"></p>
+      <div id="options" class="opcoes-radio-botoes"></div>
+      <button id="next-btn" class="proxima-pergunta-btn">Próxima Pergunta</button>
+    </div>
+
+    <div id="resultContainer" class="resultado hidden">
+      <h2>Resultado Final</h2>
+      <p id="totalScore"></p>
+      <p id="strokeLevel"></p>
+      <p id="resultDescription" class="intro"></p>
+        <p id="prognosis"></p>
+
+      <div id="botoesAcao" class="botoes">
+        <button id="gerarRelatorio" class="relatorio-btn">Gerar Relatório</button>
+        <button id="retestar" class="reteste-btn">Refazer Teste</button>
+      </div>
+      <textarea id="report-box" rows="15" style="width: 100%; margin-top: 20px; display: none;"></textarea>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

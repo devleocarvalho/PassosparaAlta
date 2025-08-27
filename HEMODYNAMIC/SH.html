@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Monitoramento de Pacientes</h1>
+       
+        <div class="no-print">
+            <h2>Cadastro de Paciente</h2>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label for="name">Nome do Paciente:</label>
+                    <input type="text" id="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bed">Leito:</label>
+                    <input type="text" id="bed" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="admission">Data de Admissão:</label>
+                    <input type="date" id="admission" required>
+                </div>
+                
+                <button type="submit">Cadastrar Paciente</button>
+            </form>
+            
+            <h2>Registro de Sinais Vitais</h2>
+            <form id="vitalsForm">
+                <div class="form-group">
+                    <label for="patientSelect">Paciente:</label>
+                    <select id="patientSelect" required></select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="time">Horário:</label>
+                    <input type="datetime-local" id="time" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="pa">Pressão Arterial (PA):</label>
+                    <input type="text" id="pa" placeholder="Ex: 120/80 mmHg" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fc">Frequência Cardíaca (FC - bpm):</label>
+                    <input type="number" id="fc" placeholder="Ex: 0-300 rpm" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fr">Frequência Respiratória (FR - rpm):</label>
+                    <input type="number" id="fr" placeholder="Ex: 0-70 ipm" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="temp">Temperatura (°C):</label>
+                    <input type="number" step="0.1" id="temp" placeholder="Ex: 0º-50ºC" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="satO2">Saturação O₂ (%):</label>
+                    <input type="number" id="satO2" min="0" max="100" placeholder="Ex: 0-100%" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="CO2">CO₂:</label>
+                    <input type="text" id="CO2" placeholder="Ex: 0-50">
+                </div>
+
+                <div class="form-group">
+                    <label for="dor">Dor (0-10):</label>
+                    <input type="number" id="dor" min="0" max="10" placeholder="doiquanto?0 nada 10 muito">
+                </div>
+
+                <div class="form-group">
+                    <label for="balancoHidrico">Balanço Hídrico:</label>
+                    <input type="text" id="balancoHidrico">
+                </div>
+
+                <div class="form-group">
+                    <label for="dispositivoDreno">Dispositivo/Dreno:</label>
+                    <input type="text" id="dispositivoDreno">
+                </div>
+
+                <div class="form-group">
+                    <label for="medicacao">Medicação:</label>
+                    <input type="text" id="medicacao">
+                </div>
+
+                <div class="form-group">
+                    <label for="dosagemMedicacao">Dosagem da Medicação:</label>
+                    <input type="text" id="dosagemMedicacao" placeholder="Ex: 500mg, 10mL">
+                </div>
+
+                <button type="submit">Registrar Sinais Vitais</button>
+            </form>
+
+            <h2>Gerar Relatório</h2>
+            <form id="reportForm">
+                <div class="form-group">
+                    <label for="reportPatient">Paciente:</label>
+                    <select id="reportPatient" required>
+                        <option value="">Selecione um paciente</option>
+                    </select>
+                </div>
+
+                <button type="submit" id="generateReport">Gerar Relatório Completo</button>
+            </form>
+        </div>
+
+        <div id="reportContainer"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000/api';
+
+        async function updatePatientSelects() {
+            const patientSelect = document.getElementById('patientSelect');
+            const reportPatient = document.getElementById('reportPatient');
+
+            patientSelect.innerHTML = '';
+            reportPatient.innerHTML = '<option value="">Selecione um paciente</option>';
+
+            try {
+                const response = await fetch(`${API_URL}/patients`);
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar pacientes.');
+                }
+                const patients = await response.json();
+
+                patients.forEach(patient => {
+                    const option1 = document.createElement('option');
+                    option1.value = patient.id;
+                    option1.textContent = `${patient.name} (Leito: ${patient.bed})`;
+                    patientSelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = patient.id;
+                    option2.textContent = `${patient.name} (Leito: ${patient.bed})`;
+                    reportPatient.appendChild(option2);
+                });
+            } catch (error) {
+                console.error('Falha ao carregar pacientes:', error);
+                alert('Não foi possível carregar a lista de pacientes. Verifique se o servidor está rodando.');
+            }
+        }
+
+        document.getElementById('patientForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const newPatient = {
+                name: document.getElementById('name').value,
+                bed: document.getElementById('bed').value,
+                admission: document.getElementById('admission').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/patients`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newPatient)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Paciente cadastrado com sucesso!');
+                    updatePatientSelects();
+                    this.reset();
+                } else {
+                    alert('Erro ao cadastrar paciente: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Erro de conexão com o servidor.');
+            }
+        });
+
+        document.getElementById('vitalsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const patientId = document.getElementById('patientSelect').value;
+            if (!patientId) {
+                alert('Selecione um paciente.');
+                return;
+            }
+
+            const vitalData = {
+                patientId: patientId,
+                time: document.getElementById('time').value,
+                pa: document.getElementById('pa').value,
+                fc: document.getElementById('fc').value,
+                fr: document.getElementById('fr').value,
+                temp: document.getElementById('temp').value,
+                satO2: document.getElementById('satO2').value,
+                co2: document.getElementById('CO2').value,
+                pain: document.getElementById('dor').value,
+                fluid_balance: document.getElementById('balancoHidrico').value,
+                drain_device: document.getElementById('dispositivoDreno').value,
+                medication: document.getElementById('medicacao').value,
+                medication_dose: document.getElementById('dosagemMedicacao').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/vitals`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(vitalData)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Sinais vitais registrados com sucesso!');
+                    this.reset();
+                } else {
+                    alert('Erro ao registrar sinais vitais: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Erro de conexão com o servidor.');
+            }
+        });
+
+        document.getElementById('reportForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const patientId = document.getElementById('reportPatient').value;
+            if (!patientId) {
+                alert('Selecione um paciente.');
+                return;
+            }
+
+            try {
+                const patientResponse = await fetch(`${API_URL}/patients`);
+                const allPatients = await patientResponse.json();
+                const patient = allPatients.find(p => p.id == patientId);
+
+                const vitalsResponse = await fetch(`${API_URL}/vitals/${patientId}`);
+                if (!vitalsResponse.ok) throw new Error('Dados de sinais vitais não encontrados.');
+                const vitals = await vitalsResponse.json();
+
+                if (!patient || vitals.length === 0) {
+                    alert('Nenhum dado de sinais vitais encontrado para este paciente.');
+                    return;
+                }
+
+                vitals.sort((a, b) => new Date(a.time) - new Date(b.time));
+
+                const reportContainer = document.getElementById('reportContainer');
+                reportContainer.innerHTML = ''; // Limpa o container antes de renderizar
+
+                // CRIAÇÃO E INSERÇÃO DO CONTEÚDO DO RELATÓRIO
+
+                // Header
+                const headerHtml = `
+                    <div class="report-header">
+                        <h1>Relatório de Monitoramento</h1>
+                        <p><strong>Data de geração:</strong> ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+                    </div>
+                    <div class="patient-info">
+                        <h2>Paciente: ${patient.name}</h2>
+                        <p><strong>Leito:</strong> ${patient.bed}</p>
+                        <p><strong>Data de admissão:</strong> ${new Date(patient.admission).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                `;
+                reportContainer.insertAdjacentHTML('beforeend', headerHtml);
+
+                // Main Content and Sidebar
+                const reportContentDiv = document.createElement('div');
+                reportContentDiv.className = 'report-content';
+
+                const mainReportSectionDiv = document.createElement('div');
+                mainReportSectionDiv.className = 'main-report-section';
+
+                const medicationSidebarDiv = document.createElement('div');
+                medicationSidebarDiv.className = 'medication-sidebar';
+
+                // Tabela de Sinais Vitais
+                const vitalsTableHtml = `
+                    <h3>Registros de Sinais Vitais</h3>
+                    <table class="vitals-table">
+                        <thead>
+                            <tr>
+                                <th>Data e Horário</th>
+                                <th>PA</th>
+                                <th>PAM</th>
+                                <th>FC (bpm)</th>
+                                <th>FR (rpm)</th>
+                                <th>Temp (°C)</th>
+                                <th>SatO₂ (%)</th>
+                                <th>CO₂</th>
+                                <th>Dor (0-10)</th>
+                                <th>Balanço Hídrico</th>
+                                <th>Dispositivo/Dreno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${vitals.map(vital => `
+                                <tr>
+                                    <td>${new Date(vital.time).toLocaleString('pt-BR')}</td>
+                                    <td>${vital.pa}</td>
+                                    <td>${vital.pam || '-'}</td>
+                                    <td>${vital.fc}</td>
+                                    <td>${vital.fr}</td>
+                                    <td>${vital.temp}</td>
+                                    <td>${vital.satO2}</td>
+                                    <td>${vital.CO2 || '-'}</td>
+                                    <td>${vital.dor || '-'}</td>
+                                    <td>${vital.balancoHidrico || '-'}</td>
+                                    <td>${vital.dispositivoDreno || '-'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                mainReportSectionDiv.insertAdjacentHTML('beforeend', vitalsTableHtml);
+
+                // Botão de impressão
+                const printButton = document.createElement('button');
+                printButton.className = 'print-btn';
+                printButton.textContent = 'Imprimir Relatório';
+                printButton.onclick = () => window.print();
+                mainReportSectionDiv.appendChild(printButton);
+
+                // Sidebar de Medicações
+                const medicaçõesAdministradas = vitals.filter(v => v.medicacao && v.dosagemMedicacao).map(v => ({
+                    time: new Date(v.time).toLocaleString('pt-BR'),
+                    medicacao: v.medicacao,
+                    dosagem: v.dosagemMedicacao
+                }));
+
+                const sidebarHtml = `
+                    <h3>Medicações Administradas</h3>
+                    ${medicaçõesAdministradas.length > 0 ? medicaçõesAdministradas.map(m => `
+                        <div class="medication-item">
+                            <p><strong>Horário:</strong> ${m.time}</p>
+                            <p><strong>Medicação:</strong> ${m.medicacao}</p>
+                            <p><strong>Dosagem:</strong> ${m.dosagem}</p>
+                        </div>
+                    `).join('') : '<p>Nenhuma medicação registrada.</p>'}
+                `;
+                medicationSidebarDiv.insertAdjacentHTML('beforeend', sidebarHtml);
+
+                // Insere as seções no container principal
+                reportContentDiv.appendChild(mainReportSectionDiv);
+                reportContentDiv.appendChild(medicationSidebarDiv);
+                reportContainer.appendChild(reportContentDiv);
+
+                // Rodapé
+                const footerHtml = `
+                    <div class="signature-area">
+                        <div style="border-top: 1px solid #000; width: 300px; margin-left: auto; margin-top: 50px;"></div>
+                        <p>Assinatura do Responsável</p>
+                        <p>Relatório gerado automaticamente pelo Sistema de Monitoramento</p>
+                    </div>
+                `;
+                reportContainer.insertAdjacentHTML('beforeend', footerHtml);
+
+                // CRIAÇÃO DO GRÁFICO (DEPOIS QUE O DOM ESTÁ PRONTO)
+                createCombinedChart(mainReportSectionDiv, { ...patient, vitals: vitals });
+
+                reportContainer.style.display = 'block';
+                reportContainer.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Erro ao gerar relatório:', error);
+                alert(error.message);
+            }
+        });
+
+        function createCombinedChart(container, patient) {
+            const vitals = patient.vitals;
+            const times = vitals.map(v => new Date(v.time));
+
+            const allData = {
+                'PA Sistólica': vitals.map(v => ({ x: new Date(v.time), y: v.pa ? parseInt(v.pa.split('/')[0]) : null })),
+                'PA Diastólica': vitals.map(v => ({ x: new Date(v.time), y: v.pa ? parseInt(v.pa.split('/')[1]) : null })),
+                'PAM': vitals.map(v => ({ x: new Date(v.time), y: v.pam })),
+                'FC (bpm)': vitals.map(v => ({ x: new Date(v.time), y: v.fc })),
+                'FR (rpm)': vitals.map(v => ({ x: new Date(v.time), y: v.fr })),
+                'Temp (°C)': vitals.map(v => ({ x: new Date(v.time), y: v.temp })),
+                'SatO₂ (%)': vitals.map(v => ({ x: new Date(v.time), y: v.satO2 })),
+                'Dor (0-10)': vitals.map(v => ({ x: new Date(v.time), y: v.dor }))
+            };
+
+            const medicationData = vitals.filter(v => v.medicacao).map(v => ({
+                x: new Date(v.time),
+                y: 160,
+                medicacao: v.medicacao,
+                dosagem: v.dosagemMedicacao
+            }));
+
+            const colors = {
+                'PA Sistólica': '#FF6384',
+                'PA Diastólica': '#36A2EB',
+                'PAM': '#FFCE56',
+                'FC (bpm)': '#4BC0C0',
+                'FR (rpm)': '#9966FF',
+                'Temp (°C)': '#FF9F40',
+                'SatO₂ (%)': '#C9CBCF',
+                'Dor (0-10)': '#C62E65',
+                'Medicação': '#008000'
+            };
+
+            const combinedChartDiv = document.createElement('div');
+            combinedChartDiv.innerHTML = '<h3>Evolução dos Sinais Vitais</h3>';
+
+            const controlsDiv = document.createElement('div');
+            controlsDiv.className = 'chart-controls';
+            controlsDiv.innerHTML = '<strong>Mostrar:</strong>';
+
+            Object.keys(allData).forEach(key => {
+                const controlId = `show-${key.replace(/\s+/g, '-')}`;
+                controlsDiv.innerHTML += `
+                    <label>
+                        <input type="checkbox" id="${controlId}" checked>
+                        <span style="color: ${colors[key]}">■</span> ${key}
+                    </label>
+                `;
+            });
+
+            const medicationControlId = `show-Medicação`;
+            controlsDiv.innerHTML += `
+                <label>
+                    <input type="checkbox" id="${medicationControlId}" checked>
+                    <span style="color: ${colors['Medicação']}; font-size: 1.5em; line-height: 0.5;">★</span> Medicação
+                </label>
+            `;
+
+            combinedChartDiv.appendChild(controlsDiv);
+
+            const chartCanvasContainer = document.createElement('div');
+            chartCanvasContainer.className = 'combined-chart-container';
+            combinedChartDiv.appendChild(chartCanvasContainer);
+
+            const canvas = document.createElement('canvas');
+            chartCanvasContainer.appendChild(canvas);
+
+            container.insertBefore(combinedChartDiv, container.querySelector('.print-btn'));
+
+            const initialDatasets = Object.keys(allData).map(key => ({
+                label: key,
+                data: allData[key],
+                borderColor: colors[key],
+                backgroundColor: colors[key] + '33',
+                tension: 0.3,
+                fill: false,
+                hidden: false,
+                type: 'line'
+            }));
+
+            initialDatasets.push({
+                label: 'Medicação',
+                data: medicationData,
+                backgroundColor: colors['Medicação'],
+                pointStyle: 'star',
+                radius: 8,
+                hoverRadius: 10,
+                type: 'scatter',
+                hidden: false
+            });
+
+            const ctx = canvas.getContext('2d');
+            const combinedChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: initialDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day',
+                                tooltipFormat: 'dd/MM/yyyy HH:mm'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Período de Internamento'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'PA/PAM/FC/FR/Dor'
+                            },
+                            min: 0,
+                            max: 200
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Temp/ SatO₂',
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (context.dataset.type === 'scatter' && context.dataset.label === 'Medicação') {
+                                        const medication = context.raw.medicacao;
+                                        const dosagem = context.raw.dosagem;
+                                        return `Medicação: ${medication} (${dosagem})`;
+                                    } else {
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y;
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            combinedChart.data.datasets.forEach(ds => {
+                if (['Temp (°C)', 'SatO₂ (%)'].includes(ds.label)) {
+                    ds.yAxisID = 'y1';
+                } else {
+                    ds.yAxisID = 'y';
+                }
+            });
+
+            setTimeout(() => {
+                Object.keys(allData).forEach(key => {
+                    const controlId = `show-${key.replace(/\s+/g, '-')}`;
+                    const checkbox = document.getElementById(controlId);
+                    if (checkbox) {
+                        checkbox.addEventListener('change', function() {
+                            const datasetIndex = combinedChart.data.datasets.findIndex(ds => ds.label === key);
+                            if (datasetIndex !== -1) {
+                                combinedChart.setDatasetVisibility(datasetIndex, this.checked);
+                                combinedChart.update();
+                            }
+                        });
+                    }
+                });
+
+                const medicationControlId = `show-Medicação`;
+                const medicationCheckbox = document.getElementById(medicationControlId);
+                if (medicationCheckbox) {
+                    medicationCheckbox.addEventListener('change', function() {
+                        const datasetIndex = combinedChart.data.datasets.findIndex(ds => ds.label === 'Medicação');
+                        if (datasetIndex !== -1) {
+                            combinedChart.setDatasetVisibility(datasetIndex, this.checked);
+                            combinedChart.update();
+                        }
+                    });
+                }
+            }, 100);
+
+            combinedChart.update();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePatientSelects();
+        });
+    </script>
+</body>
+</html>

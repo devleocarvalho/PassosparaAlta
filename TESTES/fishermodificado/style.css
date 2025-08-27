@@ -1,0 +1,238 @@
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(to right, #e3f2fd, #fce4ec);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Usamos min-height para permitir rolagem se o conteúdo for muito grande */
+    box-sizing: border-box; /* Garante que padding e border sejam incluídos na largura/altura */
+}
+
+.container {
+    background-color: white;
+    padding: 2rem 3rem; /* Do seu modelo */
+    border-radius: 20px; /* Do seu modelo */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); /* Do seu modelo */
+    text-align: center;
+    max-width: 500px; /* Do seu modelo */
+    width: 90%; /* Do seu modelo */
+    box-sizing: border-box;
+
+    /* Para que o conteúdo se ajuste verticalmente sem scroll interno do container */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    max-height: 96vh; /* Limita a altura para caber na maioria das telas */
+}
+
+h1 {
+    color: #5e35b1; /* Do seu modelo */
+    margin-bottom: 10px; /* Do seu modelo */
+}
+
+.intro {
+    color: #444; /* Do seu modelo */
+    margin-bottom: 20px; /* Do seu modelo */
+}
+
+.pergunta { /* Classe para o texto da pergunta */
+    font-size: 1.5rem; /* Do seu modelo */
+    color: #333; /* Do seu modelo */
+    margin-bottom: 20px; /* Do seu modelo */
+    font-weight: bold; /* Do seu modelo */
+    flex-shrink: 0; /* Impede que o texto da pergunta encolha em telas pequenas */
+}
+
+/* Container para os botões de opção */
+.botoes { /* Classe usada no seu HTML para o container de botões de opção */
+    display: flex; /* Do seu modelo */
+    justify-content: center; /* Do seu modelo */
+    gap: 15px; /* Do seu modelo */
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+    margin-bottom: 20px; /* Espaço abaixo dos botões de opção */
+    flex-grow: 1; /* Permite que ocupe o espaço vertical disponível */
+    align-items: center; /* Centraliza os botões verticalmente */
+    overflow-y: auto; /* Permite scroll interno SOMENTE se muitas opções */
+    padding-right: 5px; /* Pequeno padding para 'esconder' a barra de rolagem */
+}
+
+/* Esconde a barra de rolagem para navegadores WebKit */
+.botoes::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+/* Esconde a barra de rolagem para outros navegadores */
+.botoes {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+
+.botoes button { /* Estilo geral para botões dentro de .botoes */
+    margin: 10px; /* Do seu modelo, mas ajustado para não conflitar com gap */
+    padding: 15px 30px; /* Do seu modelo */
+    font-size: 1.1rem; /* Do seu modelo */
+    border: none; /* Do seu modelo */
+    border-radius: 12px; /* Do seu modelo */
+    cursor: pointer; /* Do seu modelo */
+    transition: background 0.3s ease, transform 0.2s ease; /* Combinado do seu modelo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para botões */
+    flex-grow: 1; /* Permite que o botão cresça para ocupar espaço */
+    min-width: 120px; /* Largura mínima para botões */
+}
+
+/* Cores específicas para os botões de opção - adaptando do seu :nth-child(1) */
+/* Você só tem dois botões de opção. Vamos dar cores distintas. */
+.botoes button:nth-child(1) { /* Para o botão "Não" / "Fina" */
+    background-color: #81c784; /* Verde claro do seu modelo */
+    color: white;
+}
+.botoes button:nth-child(2) { /* Para o botão "Sim" / "Espessa" */
+    background-color: #e14848; /* Vermelho do seu modelo de #botoesAfasia */
+    color: white;
+}
+
+
+/* Efeitos de hover e active para todos os botões */
+.botoes button:hover, #botoesAcao button:hover {
+    opacity: 0.9; /* Do seu modelo */
+    transform: translateY(-2px); /* Do seu modelo */
+}
+
+.botoes button:active, #botoesAcao button:active {
+    transform: translateY(0); /* Do seu modelo */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Do seu modelo */
+}
+
+/* --- Seção de Resultado --- */
+.resultado { /* Classe para a div de resultado */
+    font-size: 1.2rem; /* Do seu modelo */
+    margin-top: 30px; /* Do seu modelo */
+    color: #222; /* Do seu modelo */
+    animation: fadeIn 0.6s ease-in-out; /* Do seu modelo */
+    display: flex; /* Tornar flex para layout interno */
+    flex-direction: column;
+    justify-content: center; /* Centraliza conteúdo verticalmente */
+    flex-grow: 1; /* Permite que ocupe o espaço restante */
+    align-items: center; /* Centraliza horizontalmente */
+    text-align: center; /* Garante que o texto seja centralizado */
+}
+
+.resultado h3 { /* Título do resultado */
+    color: #5e35b1;
+    margin-bottom: 15px; /* Espaço abaixo do título */
+    font-size: 1.8rem;
+}
+
+.resultado p {
+    margin-bottom: 8px; /* Espaçamento entre os parágrafos de resultado */
+}
+
+.resultado strong { /* Do seu modelo */
+    color: #4a148c; /* Do seu modelo */
+    font-size: 1.3rem; /* Do seu modelo */
+}
+
+/* --- Botões de Ação (Gerar Relatório, Repetir Teste) --- */
+#botoesAcao { /* Do seu modelo */
+    margin-top: 20px; /* Do seu modelo */
+    display: flex; /* Do seu modelo */
+    justify-content: center; /* Do seu modelo */
+    gap: 20px; /* Do seu modelo */
+    flex-wrap: wrap; /* Permite que os botões quebrem a linha */
+    flex-shrink: 0; /* Impede que os botões encolham */
+}
+
+#botoesAcao button { /* Do seu modelo */
+    padding: 15px 30px; /* Do seu modelo */
+    font-size: 1.1rem; /* Do seu modelo */
+    border: none; /* Do seu modelo */
+    border-radius: 12px; /* Do seu modelo */
+    cursor: pointer; /* Do seu modelo */
+    transition: background 0.3s ease, transform 0.2s ease; /* Do seu modelo */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Do seu modelo */
+    min-width: 45%; /* Garante um tamanho mínimo para os botões */
+}
+
+#botoesAcao button:nth-child(1) { /* Botão Gerar Relatório */
+    background-color: #5e35b1; /* Do seu modelo */
+    color: white; /* Do seu modelo */
+}
+
+#botoesAcao button:nth-child(2) { /* Botão Repetir Teste */
+    background-color: #fbc02d; /* Do seu modelo */
+    color: #333; /* Do seu modelo */
+}
+
+/* --- Textarea do Relatório --- */
+#report { /* ID da textarea */
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical; /* Permite redimensionar verticalmente */
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+    height: 25vh; /* Altura fixa em vh, permite scroll interno */
+    overflow-y: auto; /* Permite scroll interno SOMENTE para o relatório */
+    flex-shrink: 0; /* Impede que a textarea encolha */
+}
+
+/* Esconde a barra de rolagem para navegadores WebKit */
+#report::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+/* Esconde a barra de rolagem para outros navegadores */
+#report {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+
+/* --- Utilitários --- */
+.hidden {
+    display: none !important;
+}
+
+@keyframes fadeIn { /* Do seu modelo */
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Queries para responsividade */
+@media (max-width: 400px) {
+    .container {
+        padding: 1.5rem;
+    }
+    h1 {
+        font-size: 1.8rem;
+    }
+    .pergunta {
+        font-size: 1.2rem;
+    }
+    .botoes button, #botoesAcao button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+    .resultado {
+        font-size: 1.1rem;
+    }
+    .resultado strong {
+        font-size: 1.2rem;
+    }
+}
+
+/* Media Query para telas muito grandes para evitar container muito largo */
+@media (min-width: 1000px) {
+    .container {
+        padding: 2.5rem 3.5rem; /* Um pouco mais de padding em telas grandes */
+    }
+}

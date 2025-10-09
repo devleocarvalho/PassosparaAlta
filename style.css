@@ -15,17 +15,17 @@ body {
       background-attachment: fixed; 
     }
 
-    .container { 
-      max-width: 90%;
-      margin: auto;
-      background: rgba(0, 0, 0, 0.15); 
-      padding: 250px; 
-      border-radius: 10px; 
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      background-size: cover;
-      background-position: center;
-      margin-top: 0px;
-    }
+    .container {
+    max-width: 90%;
+    margin: auto;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 2% 5%; 
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-size: cover;
+    background-position: center;
+    margin-top: 0px;
+}
 
     select {
       padding: 12px;
@@ -60,6 +60,7 @@ h1 {
     font-size: 1.4rem;
   }
 }
+
 
 
 

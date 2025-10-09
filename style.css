@@ -9,10 +9,10 @@ body {
       flex-direction: column;
       min-height: 100vh;
       background-image: url("./img/app.jpg");
-      background-size: 800px;    
+      background-size: cover;    
       background-position:center;
       background-repeat: no-repeat;
-      
+      background-attachment: fixed; 
     }
 
     .container { 
@@ -60,6 +60,7 @@ h1 {
     font-size: 1.4rem;
   }
 }
+
 
 
 
